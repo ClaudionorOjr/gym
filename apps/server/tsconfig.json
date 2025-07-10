@@ -1,0 +1,16 @@
+{
+	"extends": "@saas/typescript-config/base.json",
+	"include": ["src/**/*", "test/**/*"],
+	"exclude": ["node_modules/**/*"],
+	"compilerOptions": {
+		"noEmit": true,
+		"allowImportingTsExtensions": true,
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["./src/*"],
+			"@/core/*": ["./src/core/*"],
+			"@/account/*": ["./src/domain/account/*"],
+			"@/test/*": ["./test/*"]
+		}
+	}
+}

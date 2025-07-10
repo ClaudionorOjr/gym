@@ -1,0 +1,17 @@
+{
+	"name": "@saas/server",
+	"type": "module",
+	"scripts": {
+		"dev": "tsx watch src/infra/app.ts",
+		"test": "vitest run --project unit",
+		"test:watch": "vitest --project unit"
+	},
+	"devDependencies": {
+		"@faker-js/faker": "^9.9.0",
+		"@saas/typescript-config": "workspace:*",
+		"@types/node": "^24.0.12",
+		"tsx": "^4.20.3",
+		"vite-tsconfig-paths": "^5.1.4",
+		"vitest": "^3.2.4"
+	}
+}

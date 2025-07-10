@@ -1,0 +1,31 @@
+{
+	"Unit test": {
+		"scope": "javascript,typescript",
+		"prefix": "unittest",
+		"body": [
+			"import 'reflect-metadata';",
+			"import { beforeEach, describe, expect, it } from 'vitest';",
+			"import { ${TM_FILENAME_BASE/([^.]+).*/${1:/pascalcase}/} } from './${TM_FILENAME_BASE/([^.]+).*/${1}/}.ts';",
+			"import { InMemory${1/(.*)/${1:/capitalize}/}Repository } from '@/test/repositories/in-memory-${1:some}-repository.ts';",
+			"",
+			"describe('${TM_FILENAME_BASE/([^.]+).*/${1:/pascalcase}/} use case', () => {",
+			"  let ${1:some}Repository: InMemory${1/(.*)/${1:/capitalize}/}Repository;",
+			"  let sut: ${TM_FILENAME_BASE/([^.]+).*/${1:/pascalcase}/};",
+			"",
+			"  beforeEach(() => {",
+			"    ${1:some}Repository = new InMemory${1/(.*)/${1:/capitalize}/}Repository();",
+			"    sut = new ${TM_FILENAME_BASE/([^.]+).*/${1:/pascalcase}/}(${1:some}Repository);",
+			"  });",
+			"",
+			"  it('should ...', async () => {",
+			"    // logic",
+			"    const result = await sut.execute()",
+			"",
+			"    expect(result.isSuccess()).toBe(true);",
+			"",
+			"  });",
+			"});"
+		],
+		"description": "Structure for a use case unit test."
+	}
+}

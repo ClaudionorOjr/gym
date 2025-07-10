@@ -1,0 +1,61 @@
+name: Release
+
+on: workflow_dispatch
+
+permissions:
+  contents: read # apenas leitura do repositório para checkout
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout Branch Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # Garante que todo o histórico de commits esteja disponível para o semantic-release
+
+      - name: Debug Workflow Run
+        run: |
+          echo "Workflow: ${{ github.workflow }}"
+          echo "Workflow Run Job: ${{ github.job }}"
+          echo "Workflow Run Ref: ${{ github.ref }}"
+          echo "Commit SHA: ${{ github.sha }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Event Name: ${{ github.event_name }}"
+          echo "Actor: ${{ github.actor }}"
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="${{ github.ref_name }}"
+
+          if [[ "$BRANCH" == "main" ]]; then
+            echo "Creating release for main"
+            pnpm exec semantic-release
+          elif [[ "$BRANCH" == "alpha" ]]; then
+            echo "Creating prerelease for alpha"
+            pnpm exec semantic-release --branch alpha
+          else
+            echo "No release for branch $BRANCH"
+            exit 0
+          fi

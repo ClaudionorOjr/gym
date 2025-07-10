@@ -1,0 +1,31 @@
+{
+	"Use case class": {
+		"scope": "javascript,typescript",
+		"prefix": "usecase",
+		"body": [
+			"import { type Either, failure, success } from '@/core/either.ts';",
+			"import { inject, injectable } from 'tsyringe';",
+			"import type { ${1/(.*)/${1:/capitalize}/}Repository } from '../repositories/${1:some}-repository.ts';",
+			"",
+			"type ${TM_FILENAME_BASE/([^\\-]+)(\\-|$)/${1:/capitalize}/g}Request = {",
+			"  // params",
+			"};",
+			"",
+			"type ${TM_FILENAME_BASE/([^\\-]+)(\\-|$)/${1:/capitalize}/g}Response = Either<Error, object>;",
+			"",
+			"@injectable()",
+			"export class ${TM_FILENAME_BASE/([^\\-]+)(\\-|$)/${1:/capitalize}/g} {",
+			"  constructor(",
+			"    @inject('${1/(.*)/${1:/capitalize}/}Repository')",
+			"    private ${1:some}Repository: ${1/(.*)/${1:/capitalize}/}Repository",
+			"  ) {}",
+			"",
+			"  async execute({}: ${TM_FILENAME_BASE/([^\\-]+)(\\-|$)/${1:/capitalize}/g}Request): Promise<${TM_FILENAME_BASE/([^\\-]+)(\\-|$)/${1:/capitalize}/g}Response> {",
+			"    // implement logic",
+			"    return success({});",
+			"  }",
+			"}"
+		],
+		"description": "Class structure for a new use case."
+	}
+}
