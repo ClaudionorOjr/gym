@@ -10,6 +10,7 @@
 			"@/*": ["./src/*"],
 			"@/core/*": ["./src/core/*"],
 			"@/account/*": ["./src/domain/account/*"],
+			"@/commerce/*": ["./src/domain/commerce/*"],
 			"@/test/*": ["./test/*"]
 		}
 	}

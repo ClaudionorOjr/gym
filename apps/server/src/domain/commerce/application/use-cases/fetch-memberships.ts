@@ -2,14 +2,14 @@ import { type Either, success } from "@/core/either.ts";
 import type { Member } from "../../enterprise/entities/member.ts";
 import type { MembersRepository } from "../repositories/members-repository.ts";
 
-type FetchMembershipRequest = {
+type FetchMembershipsRequest = {
 	organizationId: string;
 };
 
-type FetchMembershipResponse = Either<Error, { members: Member[] }>;
+type FetchMembershipsResponse = Either<Error, { members: Member[] }>;
 
 // @injectable()
-export class FetchMembership {
+export class FetchMemberships {
 	constructor(
 		// @inject('MembersRepository')
 		private membersRepository: MembersRepository,
@@ -17,7 +17,7 @@ export class FetchMembership {
 
 	async execute({
 		organizationId,
-	}: FetchMembershipRequest): Promise<FetchMembershipResponse> {
+	}: FetchMembershipsRequest): Promise<FetchMembershipsResponse> {
 		const members =
 			await this.membersRepository.findManyByOrganizationId(organizationId);
 

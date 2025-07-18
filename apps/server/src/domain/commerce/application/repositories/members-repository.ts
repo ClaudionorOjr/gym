@@ -9,4 +9,5 @@ export interface MembersRepository {
 	findManyByOrganizationId(organizationId: string): Promise<Member[]>;
 	save(member: Member): Promise<void>;
 	delete(id: string): Promise<void>;
+	deleteManyByOrganizationId(organizationId: string): Promise<void>;
 }

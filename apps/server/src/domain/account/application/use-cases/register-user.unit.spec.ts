@@ -6,7 +6,7 @@ import { InMemoryUsersRepository } from "@/test/repositories/in-memory-users-rep
 import { UserAlreadyExistsError } from "./errors/account-errors.ts";
 import { RegisterUser } from "./register-user.ts";
 
-describe("RegisterUser use case", () => {
+describe("Register user use case", () => {
 	let usersRepository: InMemoryUsersRepository;
 	let hasher: FakeHasher;
 	let sut: RegisterUser;

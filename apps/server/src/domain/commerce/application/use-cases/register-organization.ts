@@ -1,5 +1,7 @@
 import { type Either, failure, success } from "@/core/either.ts";
+import type { UnitOfWork } from "@/core/unit-of-work.ts";
 import type { UsersRepository } from "@/domain/account/application/repositories/users-repository.ts";
+import { UserNotFoundError } from "@/domain/account/application/use-cases/errors/account-errors.ts";
 import { Member } from "@/domain/commerce/enterprise/entities/member.ts";
 import {
 	Organization,
@@ -8,6 +10,7 @@ import {
 import { createSlug } from "@/utils/create-slug.ts";
 import type { MembersRepository } from "../repositories/members-repository.ts";
 import type { OrganizationsRepository } from "../repositories/organizations-repository.ts";
+import { SameOrganizationSlugError } from "./errors/organization-errors.ts";
 
 type RegisterOrganizationRequest = Omit<
 	OrganizationProps,
@@ -21,6 +24,7 @@ export class RegisterOrganization {
 		private organizationsRepository: OrganizationsRepository,
 		private membersRepository: MembersRepository,
 		private usersRepository: UsersRepository,
+		private unitOfWork: UnitOfWork,
 	) {}
 
 	async execute({
@@ -30,7 +34,7 @@ export class RegisterOrganization {
 		const user = await this.usersRepository.findById(ownerId);
 
 		if (!user) {
-			return failure(new Error("User not found"));
+			return failure(new UserNotFoundError());
 		}
 
 		const slug = createSlug(name);
@@ -39,7 +43,7 @@ export class RegisterOrganization {
 			await this.organizationsRepository.findBySlug(slug);
 
 		if (organizationAlreadyExists) {
-			return failure(new Error("Organization already exists"));
+			return failure(new SameOrganizationSlugError());
 		}
 
 		const organization = Organization.create({
@@ -55,13 +59,13 @@ export class RegisterOrganization {
 		});
 
 		try {
-			await this.organizationsRepository.create(organization);
-			await this.membersRepository.create(member);
+			await this.unitOfWork.runInTransaction(async () => {
+				await this.organizationsRepository.create(organization);
+				await this.membersRepository.create(member);
+			});
 		} catch {
-			await this.organizationsRepository.delete(organization.id);
-
 			return failure(
-				new Error("An error occurred while creating the organization."),
+				new Error("An error occurred while creating the organization"),
 			);
 		}
 

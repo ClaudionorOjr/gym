@@ -6,7 +6,7 @@ import { InMemoryUsersRepository } from "@/test/repositories/in-memory-users-rep
 import { UserNotFoundError } from "./errors/account-errors.ts";
 import { ResetPassword } from "./reset-password.ts";
 
-describe("ResetPassword use case", () => {
+describe("Reset password use case", () => {
 	let usersRepository: InMemoryUsersRepository;
 	let hasher: FakeHasher;
 	let sut: ResetPassword;

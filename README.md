@@ -1,5 +1,7 @@
 # GYM
 
+> Projeto para o gerenciamento de academias
+
 ## Server
 
 ### Regras de negócio
@@ -15,4 +17,4 @@
 - membros: create, update, delete, read
 - Admin/Instrutor podem remover usuário de organização da qual fazem parte
 - Admin/Instrutor não podem remover usuário de organização da qual não fazem parte
-- Client não pode remover remover outro cliente de organização
+- Client não pode remover outro cliente de organização

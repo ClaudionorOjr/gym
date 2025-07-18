@@ -5,7 +5,7 @@ import { InMemoryUsersRepository } from "@/test/repositories/in-memory-users-rep
 import { DeleteUser } from "./delete-user.ts";
 import { UserNotFoundError } from "./errors/account-errors.ts";
 
-describe("DeleteUser use case", () => {
+describe("Delete user use case", () => {
 	let usersRepository: InMemoryUsersRepository;
 	let sut: DeleteUser;
 

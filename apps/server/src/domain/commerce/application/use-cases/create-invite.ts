@@ -1,11 +1,18 @@
 import { type Either, failure, success } from "@/core/either.ts";
 import type { UsersRepository } from "@/domain/account/application/repositories/users-repository.ts";
+import { UserNotFoundError } from "@/domain/account/application/use-cases/errors/account-errors.ts";
 import {
 	Invite,
 	type InviteProps,
 } from "@/domain/commerce/enterprise/entities/invite.ts";
 import type { InvitesRepository } from "../repositories/invites-repository.ts";
 import type { MembersRepository } from "../repositories/members-repository.ts";
+import {
+	InviteAlreadyExistsError,
+	NotAdminError,
+	NotMemberError,
+	UserAlreadyMemberError,
+} from "./errors/organization-errors.ts";
 
 type CreateInviteRequest = Omit<InviteProps, "createdAt">;
 type CreateInviteResponse = Either<Error, object>;
@@ -18,15 +25,15 @@ export class CreateInvite {
 	) {}
 
 	async execute({
-		email,
 		authorId,
 		organizationId,
+		email,
 		role,
 	}: CreateInviteRequest): Promise<CreateInviteResponse> {
 		const author = await this.usersRepository.findById(authorId);
 
 		if (!author) {
-			return failure(new Error("Author not found"));
+			return failure(new UserNotFoundError());
 		}
 
 		const member = await this.membersRepository.findByUserIdAndOrganizationId(
@@ -35,11 +42,13 @@ export class CreateInvite {
 		);
 
 		if (!member) {
-			return failure(new Error("Author is not a member of the organization"));
+			return failure(new NotMemberError());
 		}
 
 		if (member.role === "CUSTOMER") {
-			return failure(new Error("Only admins/instructors can create invites"));
+			return failure(
+				new NotAdminError("Only admins/instructors can create invites"),
+			);
 		}
 
 		const inviteAlreadyExists =
@@ -49,26 +58,21 @@ export class CreateInvite {
 			);
 
 		if (inviteAlreadyExists) {
-			return failure(
-				new Error("Another invite with same email already exists"),
-			);
+			return failure(new InviteAlreadyExistsError());
 		}
 
-		// TODO Para o caso do usuário não ser registrado no sistema o invite sempre retornará erro. Rever essa lógica.
 		const user = await this.usersRepository.findByEmail(email);
 
-		if (!user) {
-			return failure(new Error("User not found"));
-		}
+		if (user) {
+			const memberAlreadyExists =
+				await this.membersRepository.findByUserIdAndOrganizationId(
+					user.id,
+					organizationId,
+				);
 
-		const memberAlreadyExists =
-			await this.membersRepository.findByUserIdAndOrganizationId(
-				user.id,
-				organizationId,
-			);
-
-		if (memberAlreadyExists) {
-			return failure(new Error("User is already a member of the organization"));
+			if (memberAlreadyExists) {
+				return failure(new UserAlreadyMemberError());
+			}
 		}
 
 		const invite = Invite.create({

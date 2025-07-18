@@ -10,24 +10,21 @@ jobs:
   unit-tests:
     name: Unit Tests
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/server
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
-      
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          package_json_file: package.json
+
       - name: Debug workflow run
         run : |
           echo "Workflow: ${{ github.workflow }}"
@@ -39,6 +36,7 @@ jobs:
 
       - name: Run unit tests
         run: pnpm run test
+        working-directory: apps/server
 
   notify-release:
     name: Notify Release

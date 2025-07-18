@@ -5,7 +5,7 @@ import { InMemoryUsersRepository } from "@/test/repositories/in-memory-users-rep
 import { UserNotFoundError } from "./errors/account-errors.ts";
 import { RecoverPassword } from "./recover-password.ts";
 
-describe("RecoverPassword use case", () => {
+describe("Recover password use case", () => {
 	let usersRepository: InMemoryUsersRepository;
 	let sut: RecoverPassword;
 

@@ -4,6 +4,13 @@ import {
 	type UserProps,
 } from "@/domain/account/enterprise/entities/user.ts";
 
+/**
+ * Creates a new user with optional overrides and a specific ID.
+ *
+ * @param override - Optional partial `UserProps` to override default faker values.
+ * @param id - Optional string to set a specific ID for the user.
+ * @returns A new `User` instance.
+ */
 export function makeUser(override?: Partial<UserProps>, id?: string): User {
 	return User.create(
 		{

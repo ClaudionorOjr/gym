@@ -5,7 +5,7 @@ import { InMemoryUsersRepository } from "@/test/repositories/in-memory-users-rep
 import { EditUser } from "./edit-user.ts";
 import { UserNotFoundError } from "./errors/account-errors.ts";
 
-describe("EditUser use case", () => {
+describe("Edit user use case", () => {
 	let usersRepository: InMemoryUsersRepository;
 	let sut: EditUser;
 
