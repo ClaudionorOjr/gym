@@ -40,6 +40,7 @@ describe("Register organization use case", () => {
 		const result = await sut.execute({
 			ownerId: "user-01",
 			name: "Organization 01",
+			trialClasses: 1
 		});
 
 		expect(result.isSuccess()).toBe(true);
@@ -49,6 +50,7 @@ describe("Register organization use case", () => {
 			name: "Organization 01",
 			slug: "organization-01",
 			ownerId: "user-01",
+			trialClasses: 1
 		});
 		expect(membersRepository.members).toHaveLength(1);
 		expect(membersRepository.members[0]).toMatchObject({

@@ -5,6 +5,7 @@ export interface OrganizationProps {
 	name: string;
 	slug: string;
 	ownerId: string;
+	trialClasses: number
 	createdAt: Date;
 	updatedAt?: Date | null;
 }
@@ -38,6 +39,15 @@ export class Organization extends Entity<OrganizationProps> {
 		this.touch();
 	}
 
+	get trialClasses(): number {
+		return this.props.trialClasses;
+	}
+
+	set trialClasses(trialClasses: number) {
+		this.props.trialClasses = trialClasses;
+		this.touch();
+	}
+
 	get createdAt(): Date {
 		return this.props.createdAt;
 	}
@@ -52,12 +62,13 @@ export class Organization extends Entity<OrganizationProps> {
 	}
 
 	public static create(
-		props: Optional<OrganizationProps, "createdAt">,
+		props: Optional<OrganizationProps, "createdAt" | "trialClasses">,
 		id?: string,
 	) {
 		return new Organization(
 			{
 				...props,
+				trialClasses: props.trialClasses ?? 1,
 				createdAt: props.createdAt ?? new Date(),
 			},
 			id,

@@ -1,3 +1,4 @@
+/* ORGANIZATION */
 export class OrganizationNotFoundError extends Error {
 	constructor(message?: string) {
 		super(message ?? "Organization not found.");
@@ -30,6 +31,8 @@ export class UserAlreadyMemberError extends Error {
 	}
 }
 
+/* INVITE */
+
 export class InviteAlreadyExistsError extends Error {
 	constructor(message?: string) {
 		super(message ?? "Another invite with same email already exists.");
@@ -45,5 +48,12 @@ export class InviteNotFoundError extends Error {
 export class NotInviteOwnerError extends Error {
 	constructor(message?: string) {
 		super(message ?? "This invite belongs to another user.");
+	}
+}
+
+/* TRIAL CLASS */
+export class TrialClassesAlreadyHeld extends Error {
+	constructor(message?: string) {
+		super(message ?? "Trial class already held for this CPF.");
 	}
 }

@@ -11,11 +11,12 @@ import { createSlug } from "@/utils/create-slug.ts";
 import type { MembersRepository } from "../repositories/members-repository.ts";
 import type { OrganizationsRepository } from "../repositories/organizations-repository.ts";
 import { SameOrganizationSlugError } from "./errors/organization-errors.ts";
+import { Prettify } from "@/core/types/prettify.ts";
 
-type RegisterOrganizationRequest = Omit<
+type RegisterOrganizationRequest = Prettify<Omit<
 	OrganizationProps,
-	"slug" | "createdAt" | "updatedAt"
->;
+	"slug" | "trialClasses" | "createdAt" | "updatedAt"
+> & { trialClasses?: number }>
 
 type RegisterOrganizationResponse = Either<Error, object>;
 
@@ -30,6 +31,7 @@ export class RegisterOrganization {
 	async execute({
 		name,
 		ownerId,
+		trialClasses
 	}: RegisterOrganizationRequest): Promise<RegisterOrganizationResponse> {
 		const user = await this.usersRepository.findById(ownerId);
 
@@ -50,6 +52,7 @@ export class RegisterOrganization {
 			name,
 			slug,
 			ownerId,
+			trialClasses
 		});
 
 		const member = Member.create({
